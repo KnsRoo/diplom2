@@ -1,0 +1,81 @@
+document.addEventListener("DOMContentLoaded", function () {
+    var nav = $('nav');
+    $('.burger').on('click', function() {
+        $(this).toggleClass('active');
+        nav.slideToggle(300);
+    })
+
+    // page init
+    jQuery(function () {
+        if ($(window).innerWidth() >= 575) {
+            initDropDown();
+        }
+    });
+
+    function resetNav() {
+        if ($(window).innerWidth() <= 575) {
+            nav.removeAttr('id');
+        } else {
+            nav.attr('id', 'nav')
+        }
+    }
+    resetNav();
+    $(window).resize(resetNav);
+
+    nav.find('a').on('click', function(e) {
+        if($(this).next('ul').length > 0) {
+            e.preventDefault();
+            $(this).next('ul').slideToggle(300);
+        }
+    })
+});
+$(document).ready(function(){
+    $(".bottom-banner_Btn").click(function(){
+        $(".modal-zayavka").trigger("click");
+    });
+    $(".toPractice").click(function(){
+        $(".modal-zayavka").trigger("click");
+    });
+    $('.slider-cars__inner.owl-carousel').owlCarousel({
+        nav: true,
+        items: 1,
+        dots: false,
+        dotsEach: true,
+        animateOut: 'fadeOut',
+        mouseDrag: false,
+        touchDrag: false,
+        // autoplay: true,
+        autoplayTimeout: 5000,
+        loop: true,
+        responsive:{
+            768: {
+                dots: true
+            }
+        }
+    });
+    function carName(){
+        var name_cars = ['Kia Rio', 'Kia Ceed', 'Volskswagen Polo', 'Renault Logan', 'Hyundai Solaris'];
+        var count_dots = $(".slider-cars__inner .owl-dot").length;
+        for (var i = 0; i < count_dots; i++){
+            $(".slider-cars__inner .owl-dot").eq(i).find('span').html(name_cars[i]);
+        }
+    }
+    carName();
+    $(window).resize(function(){
+        carName();
+    });
+
+    $(".toPractice_btn").click(function(){
+        var old_title = "Заказать звонок";
+        $(".login-form.ggg fieldset").find("span.title").html($(this).html());
+        // $("div.lightbox").css("width", "520");
+        $("input[type='submit']").val("практиковаться");
+        $(".close").click(function(){
+            setTimeout(function(){
+                $(".login-form.ggg fieldset").find("span.title").html(old_title);
+                $("input[type='submit']").val(old_title);
+            }, 200)
+            // $("div.lightbox").removeAttr();
+        });
+    });
+});

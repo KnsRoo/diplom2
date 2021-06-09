@@ -1,0 +1,31 @@
+function getMessage( msg, type, delay ){
+	switch(type){
+		case 'error':
+			cssClass = 'red-popup-thor';
+		break;
+		case 'accept':
+			cssClass = 'popup-thor';
+		break;
+		case 'message':
+		default:
+			cssClass = 'green-popup-thor';
+	}
+	
+	if(delay == undefined){
+		delay = 3000;
+	}
+
+	if( $('#message-box').length == 0 ){
+		$('body').append('<div class="tip-message" id="message-box"><div class="tip-hold"><a href="#" class="btn-close" onclick="$(this).parent().parent().remove();return false;">close</a><span>' + msg + '</span></div></div>');
+	} else {
+		if( $('#message-box').css('display') == 'none' ){
+			$('#message-box').removeClass('red-popup-thor green-popup-thor popup-thor').addClass(cssClass).find('span').html(msg);
+		} else {
+			$('#message-box').remove();
+			$('body').append('<div class="tip-message" id="message-box"><div class="tip-hold"><a href="#" class="btn-close">close</a><span>' + msg + '</span></div></div>');
+		}
+	}
+	$('#message-box').addClass(cssClass);
+	$('#message-box').fadeIn(200).delay(delay).fadeOut(400);
+
+}

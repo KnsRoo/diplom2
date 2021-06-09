@@ -1,0 +1,110 @@
+(function( $ ) {
+
+  $(window).load(function() {
+    $("#nav").menuHighlight({
+      items: '>li'
+    });
+    $(".menu-active-slide").menuHighlight({
+      current: '.active',
+      click: true
+    });
+    $('.info-holder1').menuHighlight({
+      current: '.active',
+      vertical: true
+    });
+  });
+
+  $.fn.menuHighlight = function( options ) {
+    var defaults = {
+      items: '>li>a',
+      current: '.current_page_item',
+      click: false,
+      // vertical - top, height
+      // default - horizontal - left, width
+      vertical: false
+    };
+
+    var settings = $.extend( {}, defaults, options );
+
+    return this.each(function() {
+
+      var holder = $(this),
+        nav = holder.find('>ul'),
+        items = nav.find(settings.items),
+        current = nav.find(settings.current) || null,
+        line = settings.line,
+        position = settings.vertical ? 'top' : 'left',
+        size = settings.vertical ? 'height' : 'width',
+        lineClass = settings.vertical ? 'magic-line-vertical' : 'magic-line';
+
+      holder.append('<span class="' + lineClass + '"></span>');
+
+      var $magicLine = holder.find('.' + lineClass);
+
+      initLine(current);
+
+      items.hover(function() {
+        var $this = $(this),
+            pos_ = $this.position()[position],
+            size_ = size == 'width' ? $this.width() : $this.height();
+        moveLine(pos_, size_);
+      }, function() {
+        moveLine(getLineData('pos'), getLineData('size'));
+      });
+
+      if (settings.click) {
+        items.click(function() {
+          var $this = $(this),
+            pos_ = $this.position()[position],
+            size_ = size == 'width' ? $this.width() : $this.height();
+          setLineData('pos', pos_);
+          setLineData('size', size_);
+        });
+      }
+
+      function initLine (current) {
+        var pos_ = 0,
+            height_ = current && current.height() ? current.height() : 0,
+            width_ = current && current.width() ? current.width() : 0;
+
+        if (current && current.position()) {
+          pos_ = current.position()[position];
+        }
+
+        if (settings.vertical) {
+          $magicLine.height(height_);
+        } else {
+          $magicLine.width(width_);
+        }
+
+        $magicLine.css(position, pos_);
+        configLineData();
+      }
+
+      function configLineData () {
+        var pos_ = $magicLine.position()[position],
+          size_ = size == 'width' ? $magicLine.width() : $magicLine.height();
+        setLineData('pos', pos_);
+        setLineData('size', size_);
+      }
+
+      function moveLine (posVal, sizeVal) {
+        var opt = {};
+        opt[position] = posVal;
+        opt[size] = sizeVal;
+        $magicLine.stop().animate(opt);
+      }
+
+      function getLineData (key) {
+        return $magicLine.data()[key];
+      }
+
+      function setLineData (key, value) {
+        return $magicLine.data(key, value);
+      }
+
+    });
+
+  };
+
+})( jQuery );
